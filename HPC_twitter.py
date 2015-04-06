@@ -18,7 +18,7 @@ def main():
 
 	mentions = {}
 	hashtags = {}
-	term = 'market'
+	term = sys.argv[3]
 	termcounter = 0
 
 	with open(sys.argv[1]) as csvfile:
@@ -40,17 +40,15 @@ def main():
 			#update hashtags
 			hashtagcount(hashtags, tweettext)
 
-	topmentions = [[doc, mentions[doc]] for doc in sorted(mentions, key = mentions.get, reverse = True)]
-	tophashtags = [[doc, hashtags[doc]] for doc in sorted(hashtags, key = hashtags.get, reverse = True)]
+	topmentions = [[mention, mentions[mention]] for mention in sorted(mentions, key = mentions.get, reverse = True)]
+	tophashtags = [[hashtag, hashtags[hashtag]] for hashtag in sorted(hashtags, key = hashtags.get, reverse = True)]
 
 	t1 = time.time()
 	runtime = t1 - t0
 
-	print '\nRuntime is %s seconds' %(runtime)
-
 	with open(sys.argv[2], 'wb') as outputfile:
 		
-		outputfile.write('Top hashtags')
+		outputfile.write('\nTop hashtags')
 		for hashtag in tophashtags[:10]:
 			outputfile.write('\n'+str(hashtag))
 
@@ -60,11 +58,14 @@ def main():
 		
 		outputfile.write('\n\ncount of %s is %s' %(term, termcounter))
 
-	print 'Top hashtags'
-	print pp(tophashtags[:10])
-	print '\nMost mentions'	
-	print pp(topmentions[:10])	
-	print '\ncount of %s is %s' %(term, termcounter)
+		outputfile.write('\nRuntime was %s seconds\n\n' %(runtime))
+
+
+	# print 'Top hashtags'
+	# print pp(tophashtags[:10])
+	# print '\nMost mentions'	
+	# print pp(topmentions[:10])	
+	# print '\ncount of %s is %s' %(term, termcounter)
 
 
 
