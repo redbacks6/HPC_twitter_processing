@@ -4,13 +4,19 @@ Twitter processing scripts
 Author: Luke Jones
 Email: lukealexanderjones@gmail.com/lukej1@student.unimelb.edu.au
 Student ID: 654645
-Date: 3 April 2015
+Date: 8 April 2015
 """
 import sys, csv, json, re, time
 from pprint import pprint as pp
 
 url = '/Users/lukejones/Desktop/University/cloud_computing/Twitter.csv'
+urlout = '/Users/lukejones/Desktop/twitter_single.txt'
 edward_directory = '/home/projects/pMelb0243/data/Twitter.csv'
+
+data = url
+output = urlout
+count_term = 'jones'
+
 
 def main():
 
@@ -18,10 +24,9 @@ def main():
 
 	mentions = {}
 	hashtags = {}
-	term = sys.argv[3]
 	termcounter = 0
 
-	with open(sys.argv[1]) as csvfile:
+	with open(data, 'r') as csvfile:
 		
 		tweetsreader = csv.DictReader(csvfile)
 
@@ -32,7 +37,7 @@ def main():
 			tweettext = rawtweet['text'].lower()
 
 			#update term count
-			termcounter += termcount(term, tweettext)
+			termcounter += termcount(count_term, tweettext)
 
 			#update mentions
 			mentioncount(mentions, tweettext)
@@ -46,7 +51,7 @@ def main():
 	t1 = time.time()
 	runtime = t1 - t0
 
-	with open(sys.argv[2], 'wb') as outputfile:
+	with open(output, 'w') as outputfile:
 		
 		outputfile.write('\nTop hashtags')
 		for hashtag in tophashtags[:10]:
@@ -56,20 +61,9 @@ def main():
 		for mention in topmentions[:10]:
 			outputfile.write('\n'+str(mention))
 		
-		outputfile.write('\n\ncount of %s is %s' %(term, termcounter))
+		outputfile.write('\n\ncount of %s is %s' %(count_term, termcounter))
 
 		outputfile.write('\nRuntime was %s seconds\n\n' %(runtime))
-
-
-	# print 'Top hashtags'
-	# print pp(tophashtags[:10])
-	# print '\nMost mentions'	
-	# print pp(topmentions[:10])	
-	# print '\ncount of %s is %s' %(term, termcounter)
-
-
-
-
 
 """
 Count the number of times a given term (word/string) appears. 
