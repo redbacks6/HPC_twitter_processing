@@ -7,7 +7,6 @@ Student ID: 654645
 Date: 8 April 2015
 """
 import sys, csv, json, re, time
-import numpy as np
 from pprint import pprint as pp
 from mpi4py import MPI
 
@@ -42,6 +41,7 @@ def main():
 			tweetsreader = csv.DictReader(file_block(csvfile, size, rank), fieldnames = fieldnames)
 
 		for row in tweetsreader:
+
 			rawtweet = json.loads(row['value'])
 			#casefold to lowercase
 			tweettext = rawtweet['text'].lower()
@@ -187,31 +187,33 @@ def count_lines(csvfile):
 
 	return no_lines
 
-def file_block(fp, number_of_blocks, block):
-    '''
-    A generator that splits a file into blocks and iterates
-    over the lines of one of the blocks.
-    Borrowed from:
-    https://xor0110.wordpress.com/2013/04/13/how-to-read-a-chunk-of-lines-from-a-file-in-python/
-    '''
- 
-    assert 0 <= block and block < number_of_blocks
-    assert 0 < number_of_blocks
- 
-    fp.seek(0,2)
-    file_size = fp.tell()
- 
-    ini = file_size * block / number_of_blocks
-    end = file_size * (1 + block) / number_of_blocks
- 
-    if ini <= 0:
-        fp.seek(0)
-    else:
-        fp.seek(ini-1)
-        fp.readline()
- 
-    while fp.tell() < end:
-        yield fp.readline()
+def file_block(fb, number_of_blocks, block):
+	"""
+	A generator that splits a file into blocks and iterates
+	over the lines of one of the blocks.
+	Source code from:
+	https://xor0110.wordpress.com/2013/04/13/how-to-read-a-chunk-of-lines-from-a-file-in-python/
+	"""
+
+	assert 0 <= block and block < number_of_blocks
+	assert 0 < number_of_blocks
+		
+	#find the last line
+	fb.seek(-1,2)
+	#set the file size to the number of lines
+	file_size = fb.tell()
+
+	ini = file_size * block / number_of_blocks
+	end = file_size * (1 + block) / number_of_blocks
+
+	if ini <= 0:
+		fb.seek(0)
+	else:
+		fb.seek(ini-1)
+		fb.readline()
+
+	while fb.tell() < end:
+		yield fb.readline()
 
 # Run the Main Method
 if __name__ == '__main__':
