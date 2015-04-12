@@ -1,2 +1,14 @@
 
 *.pyc
+
+local_HPC_twitter.py
+
+1n1c.txt
+
+local_HPC_twitter_parallel.py
+
+1n8c.txt
+
+mpi_learn.py
+
+output.txt
