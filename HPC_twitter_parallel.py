@@ -10,10 +10,6 @@ import sys, csv, json, re, time
 from pprint import pprint as pp
 from mpi4py import MPI
 
-url = '/Users/lukejones/Desktop/University/cloud_computing/Twitter.csv'
-urlout = '/Users/lukejones/Desktop/Twitter_out.txt'
-edward_directory = '/home/projects/pMelb0243/data/Twitter.csv'
-
 data = sys.argv[1]
 output = sys.argv[2]
 term = sys.argv[3]
@@ -93,7 +89,6 @@ Input: [dict1, dict2, etc]
 Output: Master dictionary of token counts {'token': int(total_count)}
 """
 def merge_dictionaries(dictonaries):
-
 	master_dict = {}
 	for dictionary in dictonaries:
 		for token in dictionary:
@@ -115,15 +110,11 @@ Input: str(term), document represented as [term1, term2, term3]
 Output: int(count of term)
 """
 def termcount(term, document):
-	
 	count = 0
-
 	words = document.split()
-
 	for word in words:
 		if word == term:
 			count += 1
-
 	return count		
 
 
@@ -136,11 +127,8 @@ def mentioncount(mentions, document):
 	# Rules on legal twitter names as per the link
 	# https://support.twitter.com/articles/101299-why-can-t-i-register-certain-usernames
 	re_mention = re.compile(ur'(?<=@)([\w\d_]{1,15})')
-
 	mention_list = re_mention.findall(document)
-
 	countitems(mentions, mention_list)
-
 	pass	
 
 
@@ -150,21 +138,15 @@ Input: dictionary of hashtags {hashtag: int(counttags)}
 Output: Nil - modifies the hashtags dictionary
 """
 def hashtagcount(hashtags, document):
-	# Rules on legal twitter names as per the link
-	# https://support.twitter.com/articles/101299-why-can-t-i-register-certain-usernames
 	re_hashtag = re.compile(ur'(?<=#)([\w\d_]+)')
-
 	hashtag_list = re_hashtag.findall(document)
-
 	countitems(hashtags, hashtag_list)
-
 	pass	
 
 """
 Ammends count values in dictionary based on words in array
 """
 def countitems(dictionary, array):	
-
 	for word in array:
 		if word in dictionary:
 			dictionary[word] += 1
